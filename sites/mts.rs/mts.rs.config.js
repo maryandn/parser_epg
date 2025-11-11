@@ -10,7 +10,7 @@ module.exports = {
     )}&pageSize=10000`
   },
   request: {
-    maxContentLength: 10000000 // 10 Mb
+    maxContentLength: 50 * 1024 * 1024 // 50 Mb
   },
   parser({ content, channel }) {
     const items = parseItems(content, channel)
