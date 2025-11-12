@@ -45,7 +45,9 @@ function parseItems(content, channel) {
         const data = JSON.parse(content)
         if (!data || !Array.isArray(data.products)) return []
 
-        const channelData = data.products.find(c => c.code === channel.site_id)
+        const decodedId = decodeURIComponent(channel.site_id)
+
+        const channelData = data.products.find(c => c.code === decodedId)
         if (!channelData || !Array.isArray(channelData.programs)) return []
 
         channelData.programs.forEach(p => {
