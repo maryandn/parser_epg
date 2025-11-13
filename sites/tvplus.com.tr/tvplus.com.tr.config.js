@@ -12,7 +12,7 @@ const baseUrl = 'https://tvplus.com.tr/canli-tv/yayin-akisi'
 
 module.exports = {
   site: 'tvplus.com.tr',
-  days: 2,
+  days: 3,
   request: {
     cache: {
       ttl: 24 * 60 * 60 * 1000 // 1 day

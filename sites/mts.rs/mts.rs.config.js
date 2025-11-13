@@ -3,7 +3,7 @@ const dayjs = require('dayjs')
 
 module.exports = {
     site: 'mts.rs',
-    days: 2,
+    days: 3,
     url({date}) {
         return `https://mts.rs/hybris/ecommerce/b2c/v1/products/search?sort=pozicija-rastuce&searchQueryContext=CHANNEL_PROGRAM&query=:pozicija-rastuce:tip-kanala-radio:TV kanali:channelProgramDates:${date.format(
             'YYYY-MM-DD'
