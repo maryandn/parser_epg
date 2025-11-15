@@ -3,7 +3,7 @@ const cheerio = require('cheerio')
 
 module.exports = {
   site: 'sporttv.pt',
-  days: 2,
+  days: 3,
   url: 'https://www.sporttv.pt/guia',
   parser({ content, date, channel }) {
     let programs = []
