@@ -13,7 +13,7 @@ const headers = {
 
 module.exports = {
   site: 'vodafone.pt',
-  days: 2,
+  days: 3,
   request: {
     headers
   },

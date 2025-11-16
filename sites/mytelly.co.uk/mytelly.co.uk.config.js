@@ -17,7 +17,7 @@ const tz = 'Europe/London'
 
 module.exports = {
   site: 'mytelly.co.uk',
-  days: 2,
+  days: 3,
   request: {
     headers: {
       'User-Agent':
