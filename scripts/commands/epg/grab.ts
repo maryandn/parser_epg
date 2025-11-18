@@ -144,7 +144,6 @@ async function main() {
 
                 console.log(curl)
             }
-            request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.118 Safari/537.36'
             return request
         },
         error => Promise.reject(error)

@@ -21,8 +21,8 @@ module.exports = {
 
         const programElements = $('div[id^="ele-"]')
 
-        let currentDay = dayjs(date).startOf("day")
-        let nextDay = dayjs(date).startOf("day")
+        let currentDay = dayjs(date).startOf('day')
+        let nextDay = dayjs(date).startOf('day')
 
         let prevHH = null
         let prevMM = null
@@ -54,13 +54,13 @@ module.exports = {
 
             if (prevHH !== null) {
                 if (currentHH < prevHH || (currentHH === prevHH && currentMM < prevMM)) {
-                    currentDay = currentDay.add(1, "day")
+                    currentDay = currentDay.add(1, 'day')
                 }
             }
             let start = currentDay.hour(currentHH).minute(currentMM).second(0).millisecond(0)
 
             if (nextHH < currentHH || (nextHH === currentHH && nextMM < currentMM)) {
-                nextDay = currentDay.add(1, "day")
+                nextDay = currentDay.add(1, 'day')
             } else {
                 nextDay = currentDay
             }
@@ -116,7 +116,7 @@ async function getProgramDescription(programUrl) {
             }
         })
 
-        const $ = cheerio.load(response.data);
+        const $ = cheerio.load(response.data)
         const description = $('.show-content .text p').first().text().trim() || null
 
         return description
