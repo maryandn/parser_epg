@@ -4,45 +4,87 @@ const dayjs = require('dayjs')
 
 module.exports = {
     site: 'movistarplus.es',
-    days: 2,
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.118 Safari/537.36',
-    url({channel, date}) {
+    days: 3,
+    url({ channel, date }) {
         return `https://www.movistarplus.es/programacion-tv/${channel.site_id}/${date.format('YYYY-MM-DD')}`
     },
-    async parser({content}) {
-        let programs = []
-        let items = parseItems(content)
-        if (!items.length) return programs
+    request: {
+        headers: {
+            'user-agent':
+                'Mozilla/5.0 (Linux; Linux x86_64) AppleWebKit/600.3 (KHTML, like Gecko) Chrome/48.0.2544.291 Safari/600'
+        }
+    },
+    async parser({ content, date })  {
 
         const $ = cheerio.load(content)
-        const programElements = $('div[id^="ele-"]').get()
+        let programs = []
 
-        for (let i = 0; i < items.length; i++) {
-            const el = items[i]
-            let description = null
+        const programElements = $('div[id^="ele-"]')
 
-            if (programElements[i]) {
-                const programDiv = $(programElements[i])
-                const programLink = programDiv.find('a').attr('href')
+        let currentDay = dayjs(date).startOf("day")
+        let nextDay = dayjs(date).startOf("day")
 
-                if (programLink) {
-                    const idMatch = programLink.match(/id=(\d+)/)
-                    if (idMatch && idMatch[1]) {
-                        description = await getProgramDescription(programLink).catch(() => null)
-                    }
+        let prevHH = null
+        let prevMM = null
+
+        const extracted = []
+
+        programElements.each((i, elem) => {
+            const programDiv = $(elem)
+
+            const title = programDiv.find('li.title').text().trim() || null
+            const time = programDiv.find('li.time').text().trim()
+
+            extracted.push({ title, time, elem: programDiv })
+        })
+
+        for (let i = 0; i < extracted.length; i++) {
+
+            if (i === extracted.length - 1) {
+                break
+            }
+
+            const currentTitle = extracted[i].title
+            const currentTime = extracted[i].time
+            const currentElem = extracted[i].elem
+            const nextTime = extracted[i + 1].time
+
+            let [currentHH, currentMM] = currentTime.split(':').map(Number)
+            let [nextHH, nextMM] = nextTime.split(':').map(Number)
+
+            if (prevHH !== null) {
+                if (currentHH < prevHH || (currentHH === prevHH && currentMM < prevMM)) {
+                    currentDay = currentDay.add(1, "day")
                 }
+            }
+            let start = currentDay.hour(currentHH).minute(currentMM).second(0).millisecond(0)
+
+            if (nextHH < currentHH || (nextHH === currentHH && nextMM < currentMM)) {
+                nextDay = currentDay.add(1, "day")
+            } else {
+                nextDay = currentDay
+            }
+            let stop = nextDay.hour(nextHH).minute(nextMM).second(0).millisecond(0)
+
+            let description = null
+            const programLink = currentElem.find('a').attr('href')
+
+            if (programLink) {
+                description = await getProgramDescription(programLink).catch(() => null)
             }
 
             programs.push({
-                title: el.item.name,
-                description: description,
-                start: dayjs(el.item.startDate),
-                stop: dayjs(el.item.endDate)
+                title: currentTitle,
+                description,
+                start,
+                stop
             })
+            prevHH = currentHH
+            prevMM = currentMM
         }
-
         return programs
     },
+
     async channels() {
         const html = await axios
             .get('https://www.movistarplus.es/programacion-tv')
@@ -66,19 +108,6 @@ module.exports = {
     }
 }
 
-function parseItems(content) {
-    try {
-        const $ = cheerio.load(content)
-        let scheme = $('script:contains("@type": "ItemList")').html()
-        scheme = JSON.parse(scheme)
-        if (!scheme || !Array.isArray(scheme.itemListElement)) return []
-
-        return scheme.itemListElement
-    } catch {
-        return []
-    }
-}
-
 async function getProgramDescription(programUrl) {
     try {
         const response = await axios.get(programUrl, {
@@ -87,7 +116,7 @@ async function getProgramDescription(programUrl) {
             }
         })
 
-        const $ = cheerio.load(response.data)
+        const $ = cheerio.load(response.data);
         const description = $('.show-content .text p').first().text().trim() || null
 
         return description
