@@ -4,7 +4,7 @@ const dayjs = require('dayjs')
 
 module.exports = {
     site: 'movistarplus.es',
-    days: 3,
+    days: 2,
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.118 Safari/537.36',
     url({channel, date}) {
         return `https://www.movistarplus.es/programacion-tv/${channel.site_id}/${date.format('YYYY-MM-DD')}`
