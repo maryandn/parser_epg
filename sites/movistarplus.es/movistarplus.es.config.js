@@ -57,14 +57,14 @@ module.exports = {
                     currentDay = currentDay.add(1, 'day')
                 }
             }
-            let start = currentDay.hour(currentHH).minute(currentMM).second(0).millisecond(0)
+            let start = currentDay.hour(currentHH).minute(currentMM).second(0).millisecond(0).subtract(1, 'hour')
 
             if (nextHH < currentHH || (nextHH === currentHH && nextMM < currentMM)) {
                 nextDay = currentDay.add(1, 'day')
             } else {
                 nextDay = currentDay
             }
-            let stop = nextDay.hour(nextHH).minute(nextMM).second(0).millisecond(0)
+            let stop = nextDay.hour(nextHH).minute(nextMM).second(0).millisecond(0).subtract(1, 'hour')
 
             let description = null
             const programLink = currentElem.find('a').attr('href')
