@@ -4,7 +4,7 @@ const uniqBy = require('lodash.uniqby')
 
 module.exports = {
   site: 'tv.mail.ru',
-  days: 2,
+  days: 3,
   delay: 1000,
   url({ channel, date }) {
     return `https://tv.mail.ru/ajax/channel/?region_id=70&channel_id=${
