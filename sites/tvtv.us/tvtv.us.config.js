@@ -4,7 +4,7 @@ let cachedPrograms = {}
 
 module.exports = {
   site: 'tvtv.us',
-  days: 2,
+  days: 3,
   url({ date, channel }) {
     return `https://www.tvtv.us/api/v1/lineup/USA-NY71652-X/grid/${date.toJSON()}/${date
       .add(1, 'day')
