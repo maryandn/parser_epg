@@ -6,7 +6,7 @@ dayjs.extend(utc)
 
 module.exports = {
   site: 'tv.blue.ch',
-  days: 2,
+  days: 3,
   url: function ({ channel, date }) {
     return `https://services.sg101.prd.sctv.ch/catalog/tv/channels/list/(ids=${
       channel.site_id
